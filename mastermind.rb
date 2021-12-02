@@ -1,11 +1,9 @@
 class Mastermind
+  require 'io/console'
   def initialize
+    @turn = 0
     random_secret
-    p @secret
-    player_guess
-    give_clue
-    p @clue
-    p @guess
+    start_game
   end
 
   private
@@ -13,6 +11,22 @@ class Mastermind
   # generates random passcode
   def random_secret
     @secret = Array.new(4) { rand(1..6).to_s }
+  end
+
+  def start_game
+    12.times do |turn|
+      puts "Turn #{turn + 1}"
+      player_guess
+      puts give_clue
+      break if @guess == @secret
+    end
+    puts game_over
+  end
+
+  def game_over
+    return puts "Defeated! The secret was: #{@secret}" unless @guess == @secret
+
+    'You won!!'
   end
 
   def player_guess
@@ -30,7 +44,7 @@ class Mastermind
   end
 
   def give_clue
-    @clue = ''
+    @clue = "#{@guess.join}: "
     @minor_clue = ''
     @secret.each_with_index { |digit, index| major_clue(digit, index)}
     @clue += @minor_clue
@@ -45,4 +59,4 @@ class Mastermind
   end
 end
 
-game = Mastermind.new
+Mastermind.new
