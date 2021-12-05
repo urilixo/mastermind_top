@@ -1,31 +1,54 @@
 # frozen_string_literal: true
 
-require_relative './mastermind'
+require './mastermind'
 
 # Class controlling the computer logic
 class ComputerPlay < Mastermind
-  def start_game
+  def initialize
+    possible_guesses
+    super
   end
 
-  def player_guess
+  def start_game
+    12.times do |turn|
+      puts "Turn #{turn + 1}"
+      @guess = %w[1 1 2 2] if turn.zero?
+      break if @guess == @secret
+
+      choose_guess(@guess)
+      puts give_clue(@guess, @secret)
+    end
+    puts game_over
+  end
+
+  def choose_guess(guess)
+    @clue = give_clue(guess, @secret).split(':').pop
+    remove_guesses(guess, @clue)
+    @guesses.shift
+  end
+
+  def remove_guesses(guess, clue)
+    @guesses.select! { |n| give_clue(guess, n.split('')).split(':').pop == clue }
+    @guess = @guesses[0].split('')
+  end
+
+  def possible_guesses
+    guesses = []
+    (0..1295).each { |n| guesses << (n.to_s(6).to_i + 1111).to_s}
+    @guesses = guesses
   end
 
   def set_secret
     count = 0
-    guess = gets.chomp
-    guess.split('').each do |char|
+    secret = gets.chomp
+    secret.split('').each do |char|
       count += 1 if char.between?('1', '6')
     end
-    count == 4 ? @guess = guess.split('') : invalid_secret
+    count == 4 ? @secret = secret.split('') : invalid_secret
   end
 
   def invalid_secret
     puts 'Invalid secret, individual values must be between 1 and 6'
     set_secret
   end
-
-  def generate_possible
-    possible = Array.new(4) { Array.new(6) { Array(1..6) } }
-  end
-
 end
