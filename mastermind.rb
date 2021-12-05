@@ -1,5 +1,8 @@
+# frozen_string_literal: true
 
 require './clues'
+
+# Class containing methods for player as the codebreaker
 class Mastermind
   include Clues
   def initialize
@@ -45,4 +48,3 @@ class Mastermind
     player_guess
   end
 end
-

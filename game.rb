@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Class responsible for starting the game and main menu
 class Game
   require_relative 'mastermind'
   require_relative 'computer_play'
